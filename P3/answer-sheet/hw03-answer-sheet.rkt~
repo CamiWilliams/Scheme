@@ -1,0 +1,73 @@
+#lang racket
+(#%provide (all-defined))
+
+; problem 1
+(define (balanced? in)
+  'UNIMPLEMENTED  
+  )
+
+
+; problem 2-a
+(define (foldl-342 op zero-el lst)
+  'UNIMPLEMENTED  
+  )
+
+
+;problem 2-b
+(define (foldr-342 op zero-el lst)
+  'UNIMPLEMENTED  
+  )
+
+;problem 3
+(define (andmap-342 test-op lst)
+  'UNIMPLEMENTED
+  )
+
+
+;problem 4
+(define (filter-342 test-op lst)
+  'UNIMPLEMENTED
+  )
+
+
+;problem 5
+(define (map-reduce m-op r-op zero-el lst)
+  'UNIMPLEMENTED
+  )
+
+
+;problem 6
+(define (series n)
+  'UNIMPLEMENTED  
+  )
+
+
+;problem 7
+(define (matrix-to-vector op mat)
+  'UNIMPLEMENTED  
+  )
+
+
+;problem 8
+(define (square-primes list-of-numbers)
+  'UNIMPLEMENTED
+  )
+
+
+;problem 9
+(define (add-two-numbers x)
+  'UNIMPLEMENTED
+  )
+
+
+;problem 10
+(define-syntax-rule (for {var <- value-range} yield result)
+  'UNIMPLEMENTED
+  )
+
+
+;problem 11
+(define-syntax-rule
+  (partially-applied-fun (x y) body)
+  'UNIMPLEMENTED
+  )

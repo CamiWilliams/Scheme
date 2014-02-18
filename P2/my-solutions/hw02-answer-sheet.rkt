@@ -1,0 +1,269 @@
+#lang racket
+(#%provide (all-defined))
+
+#|
+If there are any specific instructions for a problem, please read them carefully. Otherwise,
+follow these general rules:
+   - replace the 'UNIMPLEMENTED symbol with your solution
+   - you are NOT allowed to change the names of any definition
+   - you are NOT allowed to change the number of arguments of the pre-defined functions,
+     but you can change the names of the arguments if you deem it necessary.
+   - make sure that you submit an asnwer sheet that compiles! If you cannot write
+     a correct solution at least make it compile, if you cannot make it compile then
+     comment it out. In the latter case, make sure that the default definitions
+     for the problem are still present. Otherwise you may incurr penalties to your
+     score for this homework.
+   - you may use any number of helper functions you deem necessary.
+|#
+;=========================== 01 Binary Search ====================================
+(define (lst-fronthalf half lst)
+  (if (zero? half)
+      '()
+      (cons (car lst) (lst-fronthalf (- half 1) (cdr lst)))
+    )
+  )
+
+(define (lst-backhalf half lst)
+  (cond 
+    ((zero? half) lst)
+    (else (lst-backhalf (- half 1) (cdr lst)))
+    )
+  )
+
+(define (binary-search lst elem)
+  (define half (floor (/ (length lst) 2)))
+  (define mid (list-ref lst half))
+     
+  (cond
+    ((and (zero? half) (= mid elem)) #t)
+    ((and (zero? half) (not(= mid elem))) #f)
+    ((= mid elem) #t)
+    ((< mid elem) (binary-search (lst-backhalf half lst) elem))
+    ((> mid elem) (binary-search (lst-fronthalf half lst) elem))
+    (else #f)
+   )
+  )
+
+;=============================== 02 Carpet =======================================
+
+(define (line n symbol)
+  (if (= n 0)
+      '()
+      (cons symbol (line (- n 1) symbol))
+   )
+ )
+
+(define (mixed lst symbol)
+  (if (null? lst)
+     lst
+     (cons (edge (car lst) symbol) (mixed (cdr lst) symbol))
+   )
+ )
+
+(define (edge lst symbol)
+  (append (cons symbol lst) (cons symbol '()))
+ )
+
+(define (carpet n)
+  (define x (+ 1 (* 2 n)))
+  (cond 
+    ((zero? n) (list (list '%)))
+    ((even? n) 
+       (append (cons (line x '%) (mixed (carpet (- n 1)) '%)) (cons (line x '%) '()))
+      )
+    (else 
+       (append (cons (line x '+) (mixed (carpet (- n 1)) '+)) (cons (line x '+) '()))
+      )
+   )
+ )
+
+;=========================== 03 Y-Combinator =====================================
+; Remember, no using define or letrec, refer to the README for more info.
+(define-syntax-rule (fact x)
+  ;Chapter 9 of the little schemer, p. 172
+  ;only lambdas, write the multiple ones here
+   ((lambda (fx) (fx x)) ;function that calls an argument on itself
+    (lambda (fx)
+     (if (=  fx 0)
+         1
+         (* fx ((fx (- fx 1))))
+       )
+      )
+     0
+    )
+   )
+
+
+; The canonical fixed point y-combinator function. The fact-alt function relies
+; on this function, don't remove it.
+(define (Y l)
+  ((lambda (f) (f f))
+   (lambda (f)
+     (l
+       (lambda (x)
+         ((f f) x)
+         )
+       )
+     )
+   )
+  )
+
+(define (fact-alt x)
+  ((Y
+     (lambda (UNIMPLEMENTED)
+       'UNIMPLEMENTED ;responsible for doing the recursion, completely seperate from the first
+       ;defining factorial twice, will look very similar
+       )
+     ) x))
+
+
+;=========================== 04 Functional Set ===================================
+(define (singleton-set x)
+  (lambda (y)
+    (equal? x y)
+    )
+  )
+; An example of how this characteristic function behaves.
+;> (define set-of-3 (singleton-set 3))
+;> (set-of-3 3)
+;#t
+;> (set-of-3 4)
+;#f
+
+
+;the set of all elements that are in either 's1' or 's2'. Check the tests
+; to see how to use these.
+(define (union s1 s2)
+  (lambda (x)
+    (or (s1 x) (s2 x)) ;union is THIS or THIS
+  )
+)
+
+;the set of all elements that are in both  in 's1' and 's2'
+(define (intersection s1 s2)
+  (lambda (x)
+    (and (s1 x) (s2 x)) ;intersection is THIS and THIS
+  )
+)
+
+;the set of all elements that are in 's1', but that are not in 's2'
+(define (diff s1 s2)
+  (lambda (x)
+    (and (s1 x) (not (s2 x)))
+   )
+ )
+
+;returns the subset of s, for which the predicate 'predicate' is true.
+(define (filter predicate s)
+  (lambda (x)
+    (and (predicate x) (s x))
+   )
+  )
+
+;we assume that the sets can contain only numbers between 0 and bound
+(define bound 100)
+
+(define (exists-helper predicate set y)
+  (cond
+    ((> y bound) #f)
+    ((and (predicate y) (set y)) #t)
+    (else (exists-helper predicate set (+ y 1)))
+    )
+  )
+
+;returns whether or not the set contains at least an element for which
+;the predicate is true.
+(define (exists? predicate s)
+ (exists-helper predicate set 1)
+)
+
+(define (all-helper predicate set y)
+    (if (> y bound)
+        #t
+        (if (and (set y) (not (predicate y)))
+           #f
+           (all-helper predicate set (+ 1 y))
+        )
+    )
+)
+;returns whether or not the predicate is true for all the elements
+;of the set
+(define (all? predicate s)
+  (all-helper predicate s 1)
+  )
+
+;returns a new set where "op" has been applied to all elements
+(define (map-set op s)
+  (define s2 s)
+  (define (f y)
+    (cond
+      ((> y bound) (diff s2 s))
+      ((s y) (set! s2 (union s2 (singleton-set (op y)))) (f(+ y 1)))
+      (else (f (+ y 1)))
+      )
+    )
+   (f 1)
+  (diff s2 s)
+  )
+
+;just a sample predicate. Please do not remove. The tests will make use of it.
+(define (prime? n)
+  ;notice how this is a curried function :)
+  (define (non-divisible? n)
+    (lambda (i)
+      (not (= (modulo n i) 0))))
+
+  ;we know that the prime divisors of a number, n, can be found in the range
+  ;2 -> sqrt(n)
+  (define range-of-prime-divisors (cddr (range (+ (integer-sqrt n) 1))))
+
+  (if (equal? n 1)
+      #f
+      (andmap (non-divisible? n) range-of-prime-divisors)
+      )
+  )
+
+;=========================== 05 Functional Map ===================================
+(define NOT-FOUND 'not-found)
+
+(define (singleton-map key value)
+    (lambda (x)
+      (if ( = x key)
+         value
+         NOT-FOUND
+       )
+     )
+  )
+
+;a map containting all key-value pairs from the previous `map` plus
+;the new (key,value) pair.
+(define (add key value m)
+  (lambda (x)
+     (if (= x key)
+        value ;x is in map, return the value (saying it is in there)
+        (m x)
+      )
+    )
+  )
+
+;a map containing all previous (key,value) pairs except the one with the given
+;given.
+(define (remove key m)
+  (lambda (x)
+     (if (= x key)
+        NOT-FOUND ;Saying that x is now not found
+        (m x)
+      )
+    )
+  )
+
+;returns the set of keys in the given map. Use the functional sets defined
+;previously. Again, you may assume that the keys range between 1 and 100.
+(define (keys m)
+  (lambda (x)
+     (if (equal? NOT-FOUND (m x)) ;if NOT_FOUND and (m x) is NOT FOUND, false
+        #f 
+        #t
+      )
+    )
+  )
