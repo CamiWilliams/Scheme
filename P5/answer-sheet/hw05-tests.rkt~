@@ -1,0 +1,630 @@
+#lang racket
+(#%provide (all-defined))
+(#%require rackunit)
+
+(#%require "hw05-answer-sheet.rkt")
+(#%require "test-infrastructure.rkt")
+
+;this function will run all the tests.
+(define (test-all)
+  (test p1-a)
+  (test p1-b)
+  (test p2-a)
+  (test p2-b)
+  (test p3-a)
+  (test p3-b)
+  (test p3-c)
+  )
+
+; Namespace for eval
+(define ns (make-base-namespace))
+
+;===============================================================================
+;======================================01=======================================
+;===============================================================================
+(define p1-a
+  (test-suite
+   "1.a - steps, define-datatype"
+
+   ;now that I have your attention, delete this impossible assertion. Then uncomment the test cases
+   ;for the environment after you've written the define-datatype for it.
+   (check-true #f)
+   #|
+   (test-case
+    "test 1. regular-file predicate test."
+    (check-true
+     (regular-file? (regular-file "CS342" 3))
+     )
+    )
+
+   (test-case
+    "test 2. dir-file predicate test."
+    (check-true
+     (empty-directory? (empty-directory "CS342"))
+     )
+    )
+
+   (test-case
+    "test 3. extend-dir predicate test"
+    (check-true
+     (extend-directory? (extend-directory (empty-directory "CS342") (regular-file "CS342-HW4.rkt" 200)) )
+     )
+    )
+
+   (test-case
+    "test 4. regular-file predicate test. False."
+    (check-false
+     (regular-file? (extend-directory (empty-directory "CS342") (regular-file "CS342-HW4.rkt" 200)))
+     )
+    )
+
+   (test-case
+    "test 5. extend-directory predicate test. true."
+    (check-true
+     (extend-directory? (extend-directory (empty-directory "CS342") (regular-file "CS342-HW4.rkt" 200)))
+     )
+    )
+
+   (test-case
+    "test 6. file predicate. False."
+    (check-false
+     (extend-directory? (empty-directory "CS342"))
+     )
+    )
+
+   (test-case
+    "test 7. regular-file->name extractor."
+    (check-equal?
+     (regular-file->name (regular-file "CS342-HW4.rkt" 200))
+     "CS342-HW4.rkt"
+     )
+    )
+
+   (test-case
+    "test 8. regular-file->bytes extractor."
+    (check-equal?
+     (regular-file->bytes (regular-file "CS342-HW4.rkt" 200))
+     200
+     )
+    )
+
+   (test-case
+    "test9 . emoty-directory->name extractor test."
+    (check-equal?
+     (empty-directory->name (empty-directory "CS342" ))
+     "CS342"
+     )
+    )
+
+   (test-case
+    "test 10. extend-directory->f-1 extractor"
+    (check-true
+     (empty-directory?
+       (extend-directory->f-1 (extend-directory (empty-directory "CS342") (regular-file "CS342-HW4.rkt" 200)) )
+       )
+     )
+    )
+
+   (test-case
+    "test 11. extend-directory->f-2 extractor."
+    (check-true
+      (regular-file?
+        (extend-directory->f-2 (extend-directory (empty-directory "CS342") (regular-file "CS342-HW4.rkt" 200)) )
+        )
+     )
+    )
+
+   (test-case
+    "exn 4. regular-file->name exception test."
+    (342-check-exn
+     (regular-file->name (empty-directory "CS342"))
+       "Invalid arguments in: regular-file->name --- expected: regular-file? --- received: empty-directory")
+    )
+
+   (test-case
+    "exn 5. regular-file->bytes exception test."
+    (342-check-exn
+       (regular-file->bytes (empty-directory "CS342"))
+       "Invalid arguments in: regular-file->bytes --- expected: regular-file? --- received: empty-directory")
+    )
+
+   (test-case
+    "exn 6. empty-directory->name exception test"
+    (342-check-exn
+       (empty-directory->name (extend-directory (empty-directory "CS342") (regular-file "CS342-HW4.rkt" 200)))
+       "Invalid arguments in: empty-directory->name --- expected: empty-directory? --- received: extend-directory")
+    )
+
+   (test-case
+    "exn 7. extend-directory->f-1 exception test"
+    (342-check-exn
+       (extend-directory->f-1 (empty-directory "CS342") )
+       "Invalid arguments in: extend-directory->f-1 --- expected: extend-directory? --- received: empty-directory")
+    )
+
+   (test-case
+    "extend-directory->f-2 exception test"
+    (342-check-exn
+       (extend-directory->f-2 (empty-directory "CS342") )
+       "Invalid arguments in: extend-directory->f-2 --- expected: extend-directory? --- received: empty-directory")
+    )
+   |#
+   );end test-suite
+  )
+
+;;======
+(define p1-b
+  (test-suite
+   "1.b - calculate the total <file> size"
+
+   ;now that I have your attention, delete this impossible assertion. Then uncomment the test cases
+   ;for the environment after you've written the define-datatype for it.
+   (check-true #f)
+   #|
+   (test-case
+    "test 1. regular-file size."
+    (check-equal?
+     (total-size (regular-file "CS342-HW4.rkt" 200))
+     200
+     )
+    )
+
+   (test-case
+    "test 2. empty-directory size."
+    (check-equal?
+     (total-size (empty-directory "CS342"))
+     0
+     )
+    )
+
+   (test-case
+    "test 3. nonempty-directory size."
+    (check-equal?
+     (total-size (extend-directory (empty-directory "CS342") (regular-file "CS342-HW4.rkt" 200)))
+     200
+     )
+    )
+
+   |#
+   )
+  )
+
+;===============================================================================
+;======================================02=======================================
+;===============================================================================
+(define p2-a
+  (test-suite
+   "2.a - environment, define datatype"
+
+   ;now that I have your attention, delete this impossible assertion. Then uncomment the test cases
+   ;for the environment after you've written the define-datatype for it.
+   (check-true #f)
+   #|
+   (test-case
+    "empty-environment"
+    (environment? (empty-env))
+    )
+
+   (test-case
+    "extend-env"
+    (environment? (extend-env 'x 24 (empty-env)))
+    (environment? (extend-env 'x 42 (extend-env 'y 42 (empty-env))))
+    )
+
+   (test-case
+    "apply-env"
+    (define x-24 (extend-env 'x 24 (empty-env)))
+    (define x-42$y-24 (extend-env 'x 42 (extend-env 'y 24 (empty-env))))
+
+    (check-equal? (apply-env x-24 'x) 24)
+
+    (check-equal? (apply-env x-42$y-24 'x) 42)
+    (check-equal? (apply-env x-42$y-24 'y) 24)
+
+    (define shadow-x (extend-env 'x 99 x-42$y-24))
+    (check-equal? (apply-env shadow-x 'x) 99 "x, should be 99 because its previous definition was shadowed")
+
+    (check-equal? (apply-env x-42$y-24 'x) 42
+                  "the previous binding of 'x should still be in the old environment.
+                   Extend environment has no side effects.")
+
+
+    )
+   |#
+   )
+  )
+
+;;========
+(define p2-b
+  (test-suite
+   "2.b extend-env-wrapper"
+
+   ;now that I have your attention, delete this impossible assertion. Then uncomment the test cases
+   ;for the environment after you've written the define-datatype for it.
+   (check-true #f)
+   #|
+   (test-case
+    "extend-env-wrapper is just another constructor, except that its a bit smarter"
+    (check-true (environment? (extend-env-wrapper 'x 42 (empty-env) NON-FINAL)))
+    (check-true (environment? (extend-env-wrapper 'x 42 (empty-env) FINAL)))
+    )
+
+   (test-case
+    "extend-env-wrapper, single mapping env"
+    (define x-42-nf (extend-env-wrapper 'x 42 (empty-env) NON-FINAL))
+    (define x-42-f (extend-env-wrapper 'x 42 (empty-env) FINAL))
+
+    ;apply-env should work just as before
+    (check-equal? (apply-env x-42-nf 'x) 42)
+    (check-equal? (apply-env x-42-f 'x) 42)
+
+    (check-equal? (apply-env (extend-env-wrapper 'x 99 x-42-nf NON-FINAL) 'x)
+                  99
+                  "trying to override x when it is *not* final, should work regardless of extend type")
+
+    (check-equal? (apply-env (extend-env-wrapper 'x 99 x-42-nf FINAL) 'x)
+                  99
+                  "trying to override x when it is *not* final, should work regardless of extend type")
+
+    (342-check-exn (extend-env-wrapper 'x 99 x-42-f NON-FINAL)
+                   "Symbol 'x is final and cannot be overriden."
+                   )
+
+    (342-check-exn (extend-env-wrapper 'x 99 x-42-f FINAL)
+                   "Symbol 'x is final and cannot be overriden."
+                   )
+    )
+
+   (test-case
+    "extend-env-wrapper with more than one binding in env."
+    (define x-42-nf (extend-env-wrapper 'x 42 (empty-env) NON-FINAL))
+    (define x-42-f (extend-env-wrapper 'x 42 (empty-env) FINAL))
+
+    (define y-24-nf$x-42-nf (extend-env-wrapper 'y 24 x-42-nf NON-FINAL))
+    (define y-24-nf$x-42-f (extend-env-wrapper 'y 24 x-42-f NON-FINAL))
+
+    (check-equal? (apply-env y-24-nf$x-42-nf 'y) 24)
+    (check-equal? (apply-env y-24-nf$x-42-f 'y) 24)
+
+    (check-equal? (apply-env (extend-env-wrapper 'y 99 y-24-nf$x-42-nf FINAL) 'y)
+                  99
+                  "you can shadow with final extensions, y-24-nf$x-42-nf")
+
+    (check-equal? (apply-env (extend-env-wrapper 'y 99 y-24-nf$x-42-f FINAL) 'y)
+                  99
+                  "you can shadow with final extensions, y-24-nf$x-42-f")
+
+    (342-check-exn (extend-env-wrapper 'x 99 y-24-nf$x-42-f NON-FINAL)
+                   "Symbol 'x is final and cannot be overriden."
+                   )
+    )
+    |#
+   );end test-suite
+  )
+
+;===============================================================================
+;======================================03=======================================
+;===============================================================================
+(define p3-a
+  (test-suite
+   "3.a expression definition"
+
+   ;now that I have your attention, delete this impossible assertion. Then uncomment the test cases
+   ;for the environment after you've written the define-datatype for it.
+   (check-true #f)
+   #|
+   (test-case
+    "test const-expression"
+    (define c-1 (const-expression 1))
+    (check-true (expression? c-1))
+    )
+
+   (test-case
+    "test add-expression"
+
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+
+    ;as we can see, the third argument has to be at least an empty list
+    (define add-1+2 (add-expression c-1 c-2 '()))
+    ;if we want to add more than two values then we have to put the remaining
+    ;values in the list
+    (define add-1+2+3 (add-expression c-1 c-2 (list c-3)))
+    (define add-1+2+3+4 (add-expression c-1 c-2 (list c-3 c-4)))
+
+    (check-true (expression? add-1+2))
+    (check-true (expression? add-1+2+3))
+    (check-true (expression? add-1+2+3+4))
+
+    )
+
+   (test-case
+    "test mul-expression"
+
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+
+    (define mul-1*2 (mul-expression c-1 c-2 '()))
+    (define mul-1*2*3 (mul-expression c-1 c-2 (list c-3)))
+    (define mul-1*2*3*4 (mul-expression c-1 c-2 (list c-3 c-4)))
+
+    (check-true (expression? mul-1*2))
+    (check-true (expression? mul-1*2*3))
+    (check-true (expression? mul-1*2*3*4))
+
+    )
+
+   (test-case
+    "test sub-expression"
+
+    (define c-10 (const-expression 10))
+    (define c-20 (const-expression 20))
+
+    (define sub-10-20 (sub-expression c-10 c-20))
+
+    (check-true (expression? sub-10-20))
+    )
+
+   (test-case
+    "test div-expression"
+
+    (define c-10 (const-expression 10))
+    (define c-20 (const-expression 20))
+
+    (define div-20/10 (div-expression c-20 c-10))
+
+    (check-true (expression? div-20/10))
+    )
+
+   (test-case
+    "test composite expressions"
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+    (define c-10 (const-expression 10))
+    (define c-20 (const-expression 20))
+
+    (define add-1+2 (add-expression c-1 c-2 '()))
+    (define add-1+2+3 (add-expression c-1 c-2 (list c-3)))
+
+    (define mul-1*2 (mul-expression c-1 c-2 '()))
+    (define mul-1*2*3 (mul-expression c-1 c-2 (list c-3)))
+
+    (define sub-10-20 (sub-expression c-10 c-20))
+    (define div-20/10 (div-expression c-20 c-10))
+
+    (check-true (expression? (mul-expression c-1
+                                             (add-expression add-1+2 mul-1*2 (list div-20/10))
+                                             (list sub-10-20
+                                                   div-20/10
+                                                   (mul-expression mul-1*2*3 c-4 '())
+                                                   )
+                                             )
+                             )
+                )
+
+    )
+
+   |#
+   );end test-suite
+  )
+
+;=====
+(define p3-b
+  (test-suite
+   "3.b expression evaluation"
+
+   ;now that I have your attention, delete this impossible assertion. Then uncomment the test cases
+   ;for the environment after you've written the define-datatype for it.
+   (check-true #f)
+
+   #|
+   (test-case
+    "test const-expression"
+    (check-equal? (evaluate-expression (const-expression 42))
+                  42
+                  "the const-expression 42 simply evaluate to 42"
+                  )
+    )
+
+   (test-case
+    "test add-expression"
+
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+
+    (check-equal? (evaluate-expression (add-expression c-1 c-2 '()))
+                  3)
+
+    (check-equal? (evaluate-expression (add-expression c-1 c-2 (list c-3 c-4)))
+                  10)
+    )
+
+   (test-case
+    "test mul-expression"
+
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+
+    (check-equal? (evaluate-expression (mul-expression c-1 c-2 '()))
+                  2)
+
+    (check-equal? (evaluate-expression (mul-expression c-1 c-2 (list c-3 c-4)))
+                  24)
+    )
+
+   (test-case
+    "test sub-expression"
+
+    (define c-10 (const-expression 10))
+    (define c-20 (const-expression 20))
+
+    (check-equal? (evaluate-expression (sub-expression c-20 c-10))
+                  10)
+
+    (check-equal? (evaluate-expression (sub-expression c-10 c-20))
+                  -10)
+    )
+
+   (test-case
+    "test div-expression"
+
+    (define c-100 (const-expression 100))
+    (define c-50 (const-expression 50))
+
+    (check-equal? (evaluate-expression (div-expression c-100 c-50))
+                  2)
+
+    (check-equal? (evaluate-expression (div-expression c-50 c-100))
+                  (/ 50 100))
+    )
+
+   (test-case
+    "test composite expressions"
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+    (define c-10 (const-expression 10))
+    (define c-20 (const-expression 20))
+
+    (define add-1+2 (add-expression c-1 c-2 '()))
+    (define add-1+2+3 (add-expression c-1 c-2 (list c-3)))
+
+    (define mul-1*2 (mul-expression c-1 c-2 '()))
+    (define mul-1*2*3 (mul-expression c-1 c-2 (list c-3)))
+
+    (define sub-10-20 (sub-expression c-10 c-20))
+    (define div-20/10 (div-expression c-20 c-10))
+
+    (check-equal? (evaluate-expression (mul-expression c-1
+                                             (add-expression add-1+2 mul-1*2 (list div-20/10))
+                                             (list sub-10-20
+                                                   div-20/10
+                                                   (mul-expression mul-1*2*3 c-4 '())
+                                                   )
+                                             )
+                             )
+                  -3360
+                )
+
+    )
+   |#
+   )
+  )
+
+(define p3-c
+  (test-suite
+   "3.c translate to racket"
+
+   ;now that I have your attention, delete this impossible assertion. Then uncomment the test cases
+   ;for the environment after you've written the define-datatype for it.
+   (check-true #f)
+
+   #|
+   (test-case
+    "test const-expression"
+    (check-equal? (eval (translate-to-racket (const-expression 42)) ns)
+                  42
+                  "the const-expression 42 simply translates to 42"
+                  )
+    )
+
+   (test-case
+    "test add-expression"
+
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+
+    (check-equal? (eval (translate-to-racket (add-expression c-1 c-2 '())) ns)
+                  3)
+
+    (check-equal? (eval (translate-to-racket (add-expression c-1 c-2 (list c-3 c-4))) ns)
+                  10)
+    )
+
+   (test-case
+    "test mul-expression"
+
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+
+    (check-equal? (eval (translate-to-racket (mul-expression c-1 c-2 '())) ns)
+                  2)
+
+    (check-equal? (eval (translate-to-racket (mul-expression c-1 c-2 (list c-3 c-4))) ns)
+                  24)
+    )
+
+   (test-case
+    "test sub-expression"
+
+    (define c-10 (const-expression 10))
+    (define c-20 (const-expression 20))
+
+    (check-equal? (eval (translate-to-racket (sub-expression c-20 c-10)) ns)
+                  10)
+
+    (check-equal? (eval (translate-to-racket (sub-expression c-10 c-20)) ns)
+                  -10)
+    )
+
+   (test-case
+    "test div-expression"
+
+    (define c-100 (const-expression 100))
+    (define c-50 (const-expression 50))
+
+    (check-equal? (eval (translate-to-racket (div-expression c-100 c-50)) ns)
+                  2)
+
+    (check-equal? (eval (translate-to-racket (div-expression c-50 c-100)) ns)
+                  (/ 50 100))
+    )
+
+   (test-case
+    "test composite expressions"
+    (define c-1 (const-expression 1))
+    (define c-2 (const-expression 2))
+    (define c-3 (const-expression 3))
+    (define c-4 (const-expression 4))
+    (define c-10 (const-expression 10))
+    (define c-20 (const-expression 20))
+
+    (define add-1+2 (add-expression c-1 c-2 '()))
+    (define add-1+2+3 (add-expression c-1 c-2 (list c-3)))
+
+    (define mul-1*2 (mul-expression c-1 c-2 '()))
+    (define mul-1*2*3 (mul-expression c-1 c-2 (list c-3)))
+
+    (define sub-10-20 (sub-expression c-10 c-20))
+    (define div-20/10 (div-expression c-20 c-10))
+
+    (check-equal? (eval (translate-to-racket (mul-expression c-1
+                                             (add-expression add-1+2 mul-1*2 (list div-20/10))
+                                             (list sub-10-20
+                                                   div-20/10
+                                                   (mul-expression mul-1*2*3 c-4 '())
+                                                   )
+                                             )
+                             ) ns)
+                  -3360
+                )
+
+    )
+    |#
+   );end test-suite
+  )

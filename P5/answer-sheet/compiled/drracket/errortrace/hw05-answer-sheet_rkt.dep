@@ -1,0 +1,1 @@
+("5.3.6" ("a98646a25ccc85311b44a9e6e10645ede7b28344" . "c621982e74f720bb70975f6be84ff977cb2d5a24") (collects #"eopl" #"eopl.rkt") #"/Users/CamiWilliams/Documents/342/hw-answers-lambacam/homework05/answer-sheet/util-lib.rkt" (collects #"racket" #"main.rkt") (collects #"racket" #"lang" #"reader.rkt"))
